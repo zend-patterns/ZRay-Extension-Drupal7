@@ -43,16 +43,31 @@ $zre->traceFunction('menu_execute_active_handler', function(){}, function($conte
 		return array('property' => $key, 'value' => $stateUser[$key]);
 	}, $stateUserKeys);
 	
-	
-	
 	$storage['userProperties'] = $stateUserValues;
+	
+	global $locks;
+	
+	var_dump($locks);
 });
+
+$zre->traceFunction('lock_acquire', function(){}, function($context, & $storage) {
+	$storage['locks'] = array('action' => 'Acquire', 'name' => $context['functionArgs'][0]);
+});
+
+$zre->traceFunction('lock_release', function(){}, function($context, & $storage) {
+	$storage['locks'] = array('action' => 'Release', 'name' => $context['functionArgs'][0]);
+});
+
+$zre->traceFunction('lock_wait', function(){}, function($context, & $storage) {
+	$storage['locks'] = array('action' => 'Wait', 'name' => $context['functionArgs'][0]);
+});
+
 
 $zre->traceFunction('drupal_retrieve_form', function(){}, function($context, & $storage) {
 
 	$formName = $context['functionArgs'][0];
  	$formId = $context['functionArgs'][1]['build_info']['form_id'];
- 	$baseFormId = $context['functionArgs'][1]['build_info']['base_form_id'];
+ 	$baseFormId = isset($context['functionArgs'][1]['build_info']['base_form_id']) ? $context['functionArgs'][1]['build_info']['base_form_id'] : '';
  	$cache = $context['functionArgs'][1]['cache'];
  	$method = $context['functionArgs'][1]['method'];
  	$activity = 'Display';
