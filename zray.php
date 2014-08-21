@@ -7,13 +7,13 @@ $zre->traceFunction('module_invoke', function(){}, function($context, & $storage
 	$action = $context['functionArgs'][1];
 	$hook = isset($context['functionArgs'][2]) ? $context['functionArgs'][2] : '';
 	
-	$storage['moduleInvoke'] = array('module' => $module, 'action' => $action, 'hook' => $hook);
+	$storage['moduleInvoke'][] = array('module' => $module, 'action' => $action, 'hook' => $hook);
 });
 
 $zre->traceFunction('drupal_load', function(){}, function($context, & $storage){
  	$module = $context['functionArgs'][1];
 	
-	$storage['LoadedModules'] = array('module' => $module);
+	$storage['LoadedModules'][] = array('module' => $module);
 });
 
 $zre->traceFunction('call_user_func', function(){}, function($context, & $storage){
@@ -21,7 +21,7 @@ $zre->traceFunction('call_user_func', function(){}, function($context, & $storag
 	$parameter = isset($context['functionArgs'][1]) ? $context['functionArgs'][1] : '';
 	$blob = isset($context['functionArgs'][2]) ? json_encode($context['functionArgs'][2]) : '';
 	
- 	$storage['CalledFunctions'] = array('called' => $called, 'parameter' => $parameter, 'info' => $blob);
+ 	$storage['CalledFunctions'][] = array('called' => $called, 'parameter' => $parameter, 'info' => $blob);
 });
 
 $zre->traceFunction('menu_execute_active_handler', function(){}, function($context, & $storage) {
@@ -45,21 +45,22 @@ $zre->traceFunction('menu_execute_active_handler', function(){}, function($conte
 	
 	$storage['userProperties'] = $stateUserValues;
 	
-	global $locks;
 	
-	var_dump($locks);
+	global $databases;
+	
+	var_dump($databases);
 });
 
 $zre->traceFunction('lock_acquire', function(){}, function($context, & $storage) {
-	$storage['locks'] = array('action' => 'Acquire', 'name' => $context['functionArgs'][0]);
+	$storage['locks'][] = array('action' => 'Acquire', 'name' => $context['functionArgs'][0]);
 });
 
 $zre->traceFunction('lock_release', function(){}, function($context, & $storage) {
-	$storage['locks'] = array('action' => 'Release', 'name' => $context['functionArgs'][0]);
+	$storage['locks'][] = array('action' => 'Release', 'name' => $context['functionArgs'][0]);
 });
 
 $zre->traceFunction('lock_wait', function(){}, function($context, & $storage) {
-	$storage['locks'] = array('action' => 'Wait', 'name' => $context['functionArgs'][0]);
+	$storage['locks'][] = array('action' => 'Wait', 'name' => $context['functionArgs'][0]);
 });
 
 
@@ -82,7 +83,7 @@ $zre->traceFunction('drupal_retrieve_form', function(){}, function($context, & $
  		$activity = 'Rebuilt';
  	}
  	
- 	$storage['RetrievedForms'] = array(
+ 	$storage['RetrievedForms'][] = array(
  			'formName' => $formName, 'formId' => $formId, 'baseFormId' => $baseFormId,
  			'cache' => $cache, 'method' => $method, 'activity' => $activity
  	);
