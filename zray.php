@@ -48,7 +48,7 @@ $zre->traceFunction('menu_execute_active_handler', function(){}, function($conte
 	
 	global $databases;
 	
-	var_dump($databases);
+// 	var_dump($databases);
 });
 
 $zre->traceFunction('lock_acquire', function(){}, function($context, & $storage) {
